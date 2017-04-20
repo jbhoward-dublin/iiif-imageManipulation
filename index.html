@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+  <head prefix="dctype: http://purl.org/dc/dcmitype/">
+    <title>UCD IIIF Image Selecting Tool</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.0/js/Jcrop.js"></script>
+    <!--
+    <script src="http://jcrop-cdn.tapmodo.com/v2.0.0-RC1/js/Jcrop.js"></script>
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="js/croppingTool.js"></script>
+    <!--
+    <link rel="stylesheet" href="http://jcrop-cdn.tapmodo.com/v2.0.0-RC1/css/Jcrop.css" type="text/css" />
+    -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.0/css/Jcrop.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" />
+    <style>
+      body{ padding-top: 20px; }
+      input[type="text"] { width: 100px; }
+      input.iiif_link { width:800px; vertical-align:5px; }
+      p.image-options { margin:6px 0 6px 0 }
+      .btn { margin-bottom: 8px; }
+      .coordinates-selected { margin: 8px 0 8px 0; }
+      .nav-box { margin-top:1em; }
+      .textbox { margin-top: 8px; }
+      .crop-align{ width: 800px; margin-left: 3em; margin-right: auto; }
+    </style>
+  </head>
+  <body>
+    <div id="cropping_tool"> </div>
+  </body>
+</html>
