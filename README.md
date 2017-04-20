@@ -1,4 +1,4 @@
-# iiif-imageManipulation
+# IIIF-imageManipulation
 Stand-alone implementation of UCD's IIIF image re-formatting tool + plugin to integrate with Mirador IIIF-compliant image viewer.
 
 To integrate with your project, install index.html in a directory with the sub-directories js and img. Once installed, usage syntax is:
