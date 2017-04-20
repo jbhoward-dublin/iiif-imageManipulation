@@ -1,12 +1,12 @@
 /*
  * croppingTool.js: manipulate images served via IIIF Image API via controls linked to IIIF parameters
  *   makes use of JCrop library for visual selection of image region & MagnificPopup for image preview
- * 
+ *
  * J B Howard - john.b.howard@ucd.ie - @john_b_howard - https://github.com/jbhoward-dublin
  *
  */
- var croptool = {
-
+var croptool = {
+    
     /* initialise  */
     init: function () {
         this.crop();
@@ -174,6 +174,28 @@
             async: true,
             url: info_url,
             dataType: "json",
+            statusCode: {
+                400: function () {
+                    alert('400 status code! user error');
+                    console.log('HTTP 400: Bad request');
+                },
+                401: function () {
+                    //alert('400 status code! user error');
+                    console.log('HTTP 401: Not authorised');
+                },
+                403: function () {
+                    //alert('400 status code! user error');
+                    console.log('HTTP 403: Forbidden');
+                },
+                404: function () {
+                    console.log('HTTP 404: Not found');
+                    showImageLoadError();
+                },
+                500: function () {
+                    console.log('HTTP 500: Server error');
+                    showImageLoadError();
+                }
+            },
             error: function (xhr) {
                 console.log(xhr.status + ': request for image metadata failed with URL ' + info_url);
                 showImageLoadError();
@@ -186,9 +208,16 @@
         
         function showImageLoadError() {
             $("#target").attr("src", "img/404-not-found.png");
-            $("set-select-all").hide();
+            $("#set-select-all").hide();
             return true;
         }
+        
+        $('img').error(function () {
+            $("#set-select-all").hide();
+            $("#interface > div").addClass("hidden");
+            $("#interface").append('<div id="interface" class="row text-center page-interface"><div class="crop-align"><img src="img/400-bad-request.png" id="target"/></div></div>');
+            return true;
+        });
         
         function getParameterByName(name, url) {
             if (! url) url = window.location.href;
@@ -334,7 +363,9 @@
                     loadImage.load(setSelectJcrop());
                 }
                 function setSelectJcrop() {
-                    if (sel_x == undefined) { return false; }
+                    if (sel_x == undefined) {
+                        return false;
+                    }
                     $('#target').Jcrop({
                         setSelect:[sel_x, sel_y, sel_x1, sel_y1]
                     });
