@@ -7,7 +7,7 @@
  */
 
 var configCropper = {
-    "crop_path": "http://dev01.digital.ucd.ie/crop/index.html",
+    "crop_path": "<path_to_installation>/index.html",
     "show_crop_link": true
 }
 
