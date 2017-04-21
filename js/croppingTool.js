@@ -14,6 +14,25 @@ var croptool = {
     
     crop: function () {
         
+        var clipboard = new Clipboard('.btn');
+        clipboard.on('success', function (e) {
+            e.clearSelection();
+            showTooltip(e.trigger, 'Copied!');
+        });
+        clipboard.on('error', function (e) {
+            showTooltip(e.trigger, fallbackMessage(e.action));
+        });
+        function showTooltip(elem, msg) {
+            $('.btn-copy-link').tooltip('hide');
+            $('button.btn-copy-link').attr('data-placement', 'bottom');
+            $('button.btn-copy-link').attr('data-original-title', msg);
+            elem.setAttribute('aria-label', msg);
+            $('.btn-copy-link').tooltip('show');
+            $('button.btn-copy-link').attr('data-placement', 'right');
+            $('button.btn-copy-link').attr('data-original-title', 'Copy link to clipboard');
+            elem.setAttribute('aria-label', 'Copy link to clipboard');
+        }
+        
         /* page HTML */
         
         /* page intro: localise */
@@ -83,8 +102,8 @@ var croptool = {
         '                    <label class="radio-inline">' +
         '                        <input type="radio" name="img_width" id="th" value="150"/> 150px </label>' +
         '                    <label><span  class="textbox">' +
-        '                        &#8212; <strong> other: </strong>' +
-        '                        <input type="text" name="img_width_other" id="ot" value=""/>' +
+        '                        &#8212; <strong> other:&#8196;</strong>' +
+        '                        <input type="text" name="img_width_other" id="ot" value="" data-toggle="tooltip" data-placement="top" title="enter an integer or &quot;full&quot;"/>' +
         '                    </span></label>' +
         '                    <span id="label_regionSquare" class="hidden">' +
         '                        <br />' +
@@ -154,7 +173,7 @@ var croptool = {
         '                        <a href="" class="img_download" download="" style="color: #fff; text-decoration: none;"><i class="fa fa-download" aria-hidden="true"/>&#8194;Download this image</a>' +
         '                    </button>' +
         '                    <p>Or copy the URL below to create a persistent hyperlink to your custom image:</p>' +
-        '                    <input class="iiif_link" type="text" readonly="readonly" name="iiif" id="iiif"/>' +
+        '                    <span class="nowrap"><input class="iiif_link" type="text" readonly="readonly" name="iiif" id="iiif" value/><button class="btn btn-xs btn-copy-link" data-clipboard-target="#iiif"><i class="fa fa-clipboard" aria-hidden="true"></i></button></span>' +
         '                </p>' +
         '            </div>' +
         '        </form>' +
@@ -165,9 +184,10 @@ var croptool = {
         
         var imageID = getParameterByName('imageID');
         
-        /* get metadata about requested image from IIIF server */        
+        /* get metadata about requested image from IIIF server */
         var info_url = imageID + '/info.json';
-        var result = {};
+        var result = {
+        };
         
         $.ajax({
             async: true,
@@ -210,22 +230,22 @@ var croptool = {
             $("#set-select-all").hide();
             switch (status_code) {
                 case 400:
-                    $("#target").attr("src", "400-bad-request.png");
-                    break;
+                $("#target").attr("src", "400-bad-request.png");
+                break;
                 case 401:
-                    $("#target").attr("src", "img/401-unauthorized.png");
-                    break;
+                $("#target").attr("src", "img/401-unauthorized.png");
+                break;
                 case 403:
-                    $("#target").attr("src", "img/403-forbidden.png");
-                    break;
+                $("#target").attr("src", "img/403-forbidden.png");
+                break;
                 case 404:
-                    $("#target").attr("src", "img/404-not-found.png");
-                    break;
+                $("#target").attr("src", "img/404-not-found.png");
+                break;
                 case 500:
-                    $("#target").attr("src", "img/500-server-error.png");
-                    break;
+                $("#target").attr("src", "img/500-server-error.png");
+                break;
                 default:
-                    $("#target").attr("src", "400-bad-request.png");
+                $("#target").attr("src", "400-bad-request.png");
             }
             return true;
         }
@@ -498,6 +518,11 @@ var croptool = {
         $('#get_url').magnificPopup({
             type: 'image'
         });
+        
+        /* initialise boostrap tooltips */
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
         
         /* toggle hide/show more options - not implemented */
         $('#iiif_format-switch').on('show', function () {
