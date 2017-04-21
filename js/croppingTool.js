@@ -164,11 +164,10 @@ var croptool = {
         $("#cropping_tool").append(page_intro).append(image_selection).append(image_display).append(image_navbox);
         
         var imageID = getParameterByName('imageID');
-        /* get metadata about requested image from IIIF server */
         
+        /* get metadata about requested image from IIIF server */        
         var info_url = imageID + '/info.json';
-        var result = {
-        };
+        var result = {};
         
         $.ajax({
             async: true,
@@ -178,22 +177,23 @@ var croptool = {
                 400: function () {
                     alert('400 status code! user error');
                     console.log('HTTP 400: Bad request');
+                    showImageInfoLoadError(400);
                 },
                 401: function () {
-                    //alert('400 status code! user error');
                     console.log('HTTP 401: Not authorised');
+                    showImageInfoLoadError(401);
                 },
                 403: function () {
-                    //alert('400 status code! user error');
                     console.log('HTTP 403: Forbidden');
+                    showImageInfoLoadError(403);
                 },
                 404: function () {
                     console.log('HTTP 404: Not found');
-                    showImageLoadError();
+                    showImageInfoLoadError(404);
                 },
                 500: function () {
                     console.log('HTTP 500: Server error');
-                    showImageLoadError();
+                    showImageInfoLoadError(500);
                 }
             },
             error: function (xhr) {
@@ -206,18 +206,29 @@ var croptool = {
             }
         });
         
-        function showImageLoadError() {
-            $("#target").attr("src", "img/404-not-found.png");
+        function showImageInfoLoadError(status_code) {
             $("#set-select-all").hide();
+            switch (status_code) {
+                case 400:
+                    $("#target").attr("src", "400-bad-request.png");
+                    break;
+                case 401:
+                    $("#target").attr("src", "img/401-unauthorized.png");
+                    break;
+                case 403:
+                    $("#target").attr("src", "img/403-forbidden.png");
+                    break;
+                case 404:
+                    $("#target").attr("src", "img/404-not-found.png");
+                    break;
+                case 500:
+                    $("#target").attr("src", "img/500-server-error.png");
+                    break;
+                default:
+                    $("#target").attr("src", "400-bad-request.png");
+            }
             return true;
         }
-        
-        $('img').error(function () {
-            $("#set-select-all").hide();
-            $("#interface > div").addClass("hidden");
-            $("#interface").append('<div id="interface" class="row text-center page-interface"><div class="crop-align"><img src="img/400-bad-request.png" id="target"/></div></div>');
-            return true;
-        });
         
         function getParameterByName(name, url) {
             if (! url) url = window.location.href;
@@ -226,7 +237,6 @@ var croptool = {
             results = regex.exec(url);
             if (! results) return null;
             if (! results[2]) return '';
-            //return decodeURIComponent(results[2].replace(/\+/g, " "));
             return results[2].replace(/\+/g, "%20");
         }
         
@@ -237,6 +247,7 @@ var croptool = {
         }
         
         function getImageData() {
+            /* image info from info.json */
             var width = result.width;
             var height = result.height;
             var multiplier = (width / 800);
@@ -330,26 +341,26 @@ var croptool = {
                 iiif_width = '800,';
             }
             
+            var getTargetDetails, img_display_width, img_display_height;
             
             var getTargetInterval = setInterval(function () {
-                var getTargetDetails = get_target_details();
+                getTargetDetails = get_target_details();
                 if (getTargetDetails.clientWidth !== undefined) {
                     clearInterval(getTargetInterval);
+                } else {
+                    img_display_width = getTargetDetails.clientWidth;
+                    img_display_height = getTargetDetails.clientHeight;
                 }
             },
             500);
-            
-            var getTargetDetails = get_target_details();
-            img_display_width = getTargetDetails.clientWidth;
-            img_display_height = getTargetDetails.clientHeight;
             
             /* image details for display on page */
             
             if (imageID !== undefined) {
                 var uri_decoded = imageID + '/full/' + iiif_width + '/' + iiif_rotation + '/' + iiif_quality + iiif_format;
-                //console.log(uri_decoded);
                 preload([uri_decoded]);
                 var loadImage = $('#target').attr("src", uri_decoded);
+                
                 var image_status = waitForImage();
                 if (loadImage.naturalWidth !== "undefined" && loadImage.naturalWidth === 0) {
                     $('#target').attr("src", "img/404-not-found.png");
