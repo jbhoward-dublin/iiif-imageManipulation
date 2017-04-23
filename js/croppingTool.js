@@ -286,6 +286,7 @@ var croptool = {
             var iiif_rotation = '0';
             var iiif_format = '.jpg';
             var iiif_quality = 'default';
+            var sizeAboveFull = false;
             
             /* API v. 1.0 and 1.1 use 'native' rather than 'default' */
             
@@ -342,11 +343,12 @@ var croptool = {
                             } else if (supported == 'regionSquare') {
                                 var attr_id = '#label_' + supported;
                                 $(attr_id).removeClass("hidden");
+                            } else if (supported == 'sizeAboveFull') {
+                                sizeAboveFull = true;
                             }
                             /*
                              * other properties to support:
                              *     rotationBy90s
-                             *     sizeAboveFull
                              *     regionSquare
                              */
                         });
@@ -411,7 +413,13 @@ var croptool = {
                 if ($(this).val() == 'full') {
                     iiif_width = 'full';
                 } else {
-                    iiif_width = $(this).val() + ',';
+                    if ($(this).val() > width && sizeAboveFull == false) {
+                        alert("Maximum allowed width is " + width + " pixels");
+                        $("input[name='img_width_other']").val(width);
+                        iiif_width = width + ',';
+                    } else {
+                        iiif_width = $(this).val() + ',';
+                    }
                 }
             });
             
