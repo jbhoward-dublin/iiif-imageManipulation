@@ -1,5 +1,5 @@
 /*
- * imageCropper.js: Mirador plugin to detect highlighted image in the slot which has the current focus, then create a link to the cropping tool with
+ * imageCropper_plugin.js: Mirador plugin to detect highlighted image in the slot which has the current focus, then create a link to the cropping tool with
  *   the highlighted image canvasID
  * J B Howard - john.b.howard@ucd.ie - @john_b_howard - https://github.com/jbhoward-dublin
  *
@@ -7,7 +7,7 @@
  */
 
 var configCropper = {
-    "crop_path": "<path_to_installation>/index.html",
+    "crop_path": "http://dev01.digital.ucd.ie/crop/index.html",
     "show_crop_link": true
 }
 
@@ -23,7 +23,7 @@ var imageCropper = {
     '</li>'].join('')),
     cropStyle: Handlebars.compile([
     '<style>',
-    ' .crop { position:relative; top:1px; }',
+    ' .crop { position:relative; }',
     ' .crop:before { content: "\\F125"; font-family: FontAwesome; left:-18px; position:absolute; top:1px; }',
     '</style>'].join('')),
     
@@ -96,13 +96,15 @@ var imageCropper = {
                 /*
                  * create a hash of canvasIDs => resourceIDs
                  * canvases["@id"] => this.resource.service["@id"]
-                 *
+                 * nota bene: data.jsonLd.sequences[0] presumably undefined in collection objects
                  */
-                var canvasArray = data.jsonLd.sequences[0].canvases;
-                var canvasID, imageID;
-                for (var i = 0; i < canvasArray.length; i++) {
-                    canvasID = canvasArray[i][ "@id"];
-                    imageIDsToCanvasIDs[canvasID] = canvasArray[i].images[0].resource.service[ "@id"];
+                if (data.jsonLd.sequences[0] !== undefined) { 
+                    var canvasArray = data.jsonLd.sequences[0].canvases;
+                    var canvasID, imageID;
+                    for (var i = 0; i < canvasArray.length; i++) {
+                        canvasID = canvasArray[i][ "@id"];
+                        imageIDsToCanvasIDs[canvasID] = canvasArray[i].images[0].resource.service[ "@id"];
+                   }
                 }
                 return;
             })
