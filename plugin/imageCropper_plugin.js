@@ -240,8 +240,10 @@ $(document).ready(function () {
     $(document).click(function (event) {
         /* update crop link with ID of highlighted image in the selected slot */
         var target = $(event.target);
-        if (target.is("canvas") || target.is("div")) {
-            var current_canvas_id = target.closest("div.view-container").find("img.highlight").attr("data-image-id");
+        
+        var current_slot_id = target.closest("div.layout-slot").attr('data-layout-slot-id');
+        if (current_slot_id !== undefined) {
+            var current_canvas_id = $('div.layout-slot[data-layout-slot-id="'+current_slot_id+'"]').find("img.highlight").attr("data-image-id");
             if (imageIDsToCanvasIDs[current_canvas_id] !== undefined) {
                 showCropLink(imageIDsToCanvasIDs[current_canvas_id]);
             }
