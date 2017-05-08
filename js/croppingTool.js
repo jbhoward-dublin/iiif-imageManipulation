@@ -38,6 +38,7 @@ var croptool = {
         /* page intro: localise */
         var page_intro =
         '    <div class="crop-align">' +
+        '        <div class="pull-left"><img src="img/ucd_logo_sm.png" style="max-height:32px;"></img></div>' +
         '        <h2>IIIF Image Manipulation Tool</h2>' +
         '        <h3>Crop and Re-size Images</h3>' +
         '        <div class="panel panel-default">' +
