@@ -18,7 +18,11 @@ To integrate with Mirador, install the plugin file ```imageCropper_plugin.js``` 
 
 A demo of the IIIF-imageManipulation tool is available at https://jbhoward-dublin.github.io/IIIF-imageManipulation/index.html?imageID=https://iiif.ucd.ie/loris/ivrla:10408.
 
-Additional IIF image IDs to try include:
+Additional IIIF image IDs to try include:
 
 * https://jbhoward-dublin.github.io/IIIF-imageManipulation/index.html?imageID=https://images.britishart.yale.edu/iiif/3b437776-3278-42dc-9daf-e881d8934c66
 * https://jbhoward-dublin.github.io/IIIF-imageManipulation/index.html?imageID=https://media.nga.gov/iiif/public/objects/5/7/6/576-primary-0-nativeres.ptif
+
+<kbd>
+<img alt="demo image" src="https://github.com/jbhoward-dublin/jbhoward-dublin.github.com/blob/master/IIIF-imageManipulation/demo/IIIF-imageManipulation_demo-01.gif"></img>
+</kbd>
