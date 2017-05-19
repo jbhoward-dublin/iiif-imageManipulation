@@ -45,13 +45,12 @@ var imageCropper = {
                 10000);
             }
         }
-        this.addCropLocalesToViewer();
     },
     
     /* adds  locales to the i18next localisation */
     addCropLocalesToViewer: function () {
-        for (language in this.locales) {
-            i18n.addResources(
+        for (var language in this.locales) {
+            i18next.addResources(
             language, 'translation',
             this.locales[language]);
         }
@@ -98,13 +97,13 @@ var imageCropper = {
                  * canvases["@id"] => this.resource.service["@id"]
                  * nota bene: data.jsonLd.sequences[0] presumably undefined in collection objects
                  */
-                if (data.jsonLd.sequences[0] !== undefined) { 
+                if (data.jsonLd.sequences[0] !== undefined) {
                     var canvasArray = data.jsonLd.sequences[0].canvases;
                     var canvasID, imageID;
                     for (var i = 0; i < canvasArray.length; i++) {
                         canvasID = canvasArray[i][ "@id"];
                         imageIDsToCanvasIDs[canvasID] = canvasArray[i].images[0].resource.service[ "@id"];
-                   }
+                    }
                 }
                 return;
             })
@@ -175,7 +174,7 @@ var imageCropper = {
             
             this.eventEmitter.subscribe('windowUpdated', function (event, data) {
                 //console.log('A: window updated');   /* returns objects with property data.id ; may also includes data.canvasID and data/loadedManifest */
-                if (data.canvasID !== undefined && viewType !== undefined && getNumSlots() ==  1) {
+                if (data.canvasID !== undefined && viewType !== undefined && getNumSlots() == 1) {
                     var currentImgID = $.trim($(".thumbnail-image.highlight").attr('data-image-id'));
                     if (imageIDsToCanvasIDs[currentImgID] !== undefined) {
                         showCropLink(imageIDsToCanvasIDs[currentImgID]);
@@ -189,6 +188,9 @@ var imageCropper = {
     
     /* initialise plugin */
     init: function () {
+        i18next.on('initialized', function () {
+            this.addCropLocalesToViewer();
+        }.bind(this));
         /* add event handlers to Mirador */
         this.cropWorkspaceEventHandler();
         this.addCropEventHandlersToViewer('ImageView');
@@ -208,7 +210,7 @@ function showCropLink(imageID) {
      * old prototype: /crop/?id=ucdlib:30895&pid=ucdlib:30708
      * current prototype: /crop/?imageID={imageIDsToCanvasIDs[currentImgID]}
      */
-     
+    
     var link = configCropper[ 'crop_path'] + '?imageID=' + imageID;
     if ($("a.crop").is(".hidden")) {
         $("a.crop").removeClass("hidden");
@@ -243,7 +245,7 @@ $(document).ready(function () {
         
         var current_slot_id = target.closest("div.layout-slot").attr('data-layout-slot-id');
         if (current_slot_id !== undefined) {
-            var current_canvas_id = $('div.layout-slot[data-layout-slot-id="'+current_slot_id+'"]').find("img.highlight").attr("data-image-id");
+            var current_canvas_id = $('div.layout-slot[data-layout-slot-id="' + current_slot_id + '"]').find("img.highlight").attr("data-image-id");
             if (imageIDsToCanvasIDs[current_canvas_id] !== undefined) {
                 showCropLink(imageIDsToCanvasIDs[current_canvas_id]);
             }
